@@ -1,0 +1,720 @@
+import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
+public class Game_Draft {
+//---------------------------------------------------------------------------------------------------------	
+	
+	/* Notes about some anomalies in the code:
+	 *(!)s indicate unfinished or ineffective code that I will rewrite.
+	 * The long lines of dashes just stand for clarity for me.
+	 * 
+	 */
+	
+//---------------------------------------------------------------------------------------------------------	
+	//Some global string variables to reduce redundancy. This should be fine since I don't care about these being unloaded with the class, and they hold no real value besides input function.
+	
+	public static String help = ("help");
+	public static String hp = ("health");	
+	public static String inv = ("inventory");
+	public static String yes = ("yes");
+	public static String no = ("no");
+	public static String spells = ("spells");
+	public static int septims = 0;
+	
+//---------------------------------------------------------------------------------------------------------	
+	
+	//REMOVE WHEN DONE	
+	
+	//Just using this for debugging so I can skip the gameStates. (This doesn't work after I deleted a lot of code, will fix it soon.
+	
+			/*public void warp() {
+				
+				String warp0 = ("Warp 0");
+				
+				String warp1 = ("Warp 1");
+				
+				String warp2 = ("Warp 2");
+				
+				String warp3 = ("Warp 3");
+				
+				String warp4 = ("Warp 4");
+				
+				String warp5 = ("Warp 5");
+				
+				String input1;
+				
+				input1 = sc.nextLine();
+				
+				if (input1.equalsIgnoreCase(warp0)) {
+					
+					this.teirmState0();
+					
+				} else if (input1.equalsIgnoreCase(warp1)) {
+					
+					
+					
+				} else if (input1.equalsIgnoreCase(warp2)) {
+					
+					
+					
+				} else if (input1.equalsIgnoreCase(warp3)) {
+					
+					
+					
+				} else if (input1.equalsIgnoreCase(warp4)) {
+					
+					
+					
+				} else if (input1.equalsIgnoreCase(warp5)) {
+					
+				
+					
+				}
+				
+			} 
+			 */
+			
+//---------------------------------------------------------------------------------------------------------	
+			
+	ArrayList<Integer> arrP = new ArrayList<Integer>(); //arrI = ArrayList Inventory
+	
+	public void potions() {
+		
+		System.out.println("You have " + septims + " septims");
+
+		if (arrP.get(0) == 0) { // basically nothing in inventory, etc.
+			
+			System.out.println("You have no potions.");
+			
+		} else if (arrP.get(0) == 1) {
+			
+			System.out.println("You have a health potion.");
+			
+		} else if (arrP.get(0) == 2) {
+			
+			System.out.println("You have 2 health potions.");
+			
+		} else if (arrP.get(0) == 3) {
+			
+			System.out.println("You have a health potion and a mana potion.");
+			
+		} 
+		
+		this.weapons();
+		
+	}
+//---------------------------------------------------------------------------------------------------------
+			
+	ArrayList<Integer> arrH = new ArrayList<Integer>(); //array for health
+	
+	
+	public void health() { //method made to keep track of health
+
+		if (arrH.get(0) == 10) { //checks the health value the game state wrote
+			
+			System.out.println("You have 10 life points");
+			
+		} else if (arrH.get(0) == 9) {
+			
+			System.out.println("You have 9 life points");
+			
+		} else if (arrH.get(0) == 8) {
+			
+			System.out.println("You have 8 life points");
+			
+		}  else if (arrH.get(0) == 7) {
+			
+			System.out.println("You have 7 life points");
+			
+		} else if (arrH.get(0) == 6) {
+					
+			System.out.println("You have 6 life points");
+					
+		}  else if (arrH.get(0) == 5) {
+			
+			System.out.println("You have 5 life points");
+
+		
+		}
+		
+	this.stateReturn();
+		
+	}
+//---------------------------------------------------------------------------------------------------------
+	
+	ArrayList<Integer> arrS = new ArrayList<Integer>();
+	
+	public void spells() { 
+		
+		if (arrS.get(0) == 0) {
+			
+			System.out.println("You know two basic spells, frostbolt and firebolt.");
+			
+		} else if (arrS.get(0) == 1) {
+			
+			System.out.println("You know the spells frostbolt, firebolt, and lightning strike."); //here is first branch of item diversity
+			
+		} else if (arrS.get(0) == 2) {
+			
+			System.out.println("You know the spells frostbolt, firebolt, and healing hands.");
+			
+		} else if (arrS.get(0) == 3) {
+			
+			System.out.println("You know two basic spells, frostbolt, firebolt, lightning strike, and blizzard.");
+			
+		} else if (arrS.get(0) == 4) {
+			System.out.println("You know two basic spells, frostbolt, firebolt, healing hands, and blizzard.");
+			
+		} else if (arrS.get(0) == 5) {
+			
+			System.out.println("You know two basic spells, frostbolt, firebolt, lightning strike, and firestorm.");
+						
+		} else if (arrS.get(0) == 6) {
+			
+			System.out.println("You know two basic spells, frostbolt, firebolt, healing hands, and firestorm.");
+			
+		}
+		
+		
+		this.stateReturn();
+		
+	}
+	
+//---------------------------------------------------------------------------------------------------------
+	
+	ArrayList<Integer> arrW = new ArrayList<Integer>(); //arrI = ArrayList Inventory
+	
+	public void weapons() {
+
+		if (arrW.get(0) == 0) {
+			
+			System.out.println("You have no weapons.");
+			
+		} else if (arrW.get(0) == 1) {
+			
+			System.out.println("You have a steel sword.");
+			
+		} else if (arrW.get(0) == 2) {
+			
+			System.out.println("You have a wooden sword. It's not much, but it will do.");			
+			
+		}
+		
+		this.stateReturn();
+		
+	}
+//---------------------------------------------------------------------------------------------------------
+	
+	/* This basically is a way for me to return the player to their specific state in the game
+	 * after running something outside of their current method. The place they get returned is added as an integer
+	 * at the start of each different method inside the code.
+	 * For example, if the player enters teirmState0, it will enter the value 0 to this array. Then, if they use
+	 * an array, such as inventory, it will print out their inventory and then will run this array, which will
+	 * return them to the current value, which is zero in this case.
+	 * I also don't need to remove the values after they are used, since when you add a value in an arraylist it 
+	 * just bumps the one that was in its place up one key(i think that's the term for it) position.
+	 */
+	
+	
+	ArrayList<Integer> arrSR = new ArrayList<Integer>(); 
+	
+	public void stateReturn() {
+		
+		if (arrSR.get(0) == 0) {
+			
+			this.teirmState0();
+			
+		} else if (arrSR.get(0) == 1) {
+			
+			this.teirmMerchantBuy();
+			
+		} else if (arrSR.get(0) == 2) {
+		
+		this.teirmMerchantSell();
+		
+		} else if (arrSR.get(0) == 3) {
+			
+			this.teirmMerchantWelcomeShort();
+			
+		} else if (arrSR.get(0) == 4) {
+			
+			this.teirmMerchantExit();
+			
+		}
+		
+	}
+	
+//---------------------------------------------------------------------------------------------------------
+
+	Scanner sc = new Scanner(System.in); //makes a scanner
+	
+	public void start () throws InterruptedException { //don't know what throws means but needed it for the sleep
+		
+		System.out.println("Here starts the tale of Urian Valvolor, a human living in the seaside town, Teirm.");
+				
+		TimeUnit.SECONDS.sleep(0); //just waits for effect, 0 right now so i dont have to wait (! put back to three when finished)
+		
+		System.out.println("For his trade, he was a scribe. But what town people didn't know, was that he also had the aptitude to be a mage.");
+		
+		TimeUnit.SECONDS.sleep(0);
+		
+		System.out.println("Trained by a high ranked magician, Veduza, he began to cultivate his own powers, though he was still a novice.");
+		
+		TimeUnit.SECONDS.sleep(0);
+		
+		System.out.println("A few years after his initial training, he began to feel sickly, as if his life was slowly draining away.");
+		
+		TimeUnit.SECONDS.sleep(0);
+		
+		System.out.println("To his great suprise, it turned out that Veduza was secretly a necromancer, and had cast curses on his previous students");
+		System.out.println("that drew power from their bodies.");
+		
+		TimeUnit.SECONDS.sleep(0);
+		
+		System.out.println("Wasting little time, Urian knew that if he did not stop Veduza soon enough, he would be dead and there would be much greater trouble on the horizon.");
+		
+		TimeUnit.SECONDS.sleep(0);
+		
+		System.out.println("Urian found that Veduza had relocated to the Du Veldon Forest, a magical and perilous place, full of danger.");
+		
+		TimeUnit.SECONDS.sleep(0);
+		
+		System.out.println("With this knowledge, he began his quest to slay Veduza, and save Itethra (The continent they live on.) ");
+		
+		arrS.add(0,0); // these initialize the players parameters regarding their health, inventory, etc.
+		arrP.add(0,0);
+		arrW.add(0,0);
+		arrH.add(0,10);
+		septims += 10;
+	
+		this.teirmState0();	
+		
+	}
+
+	
+	/* First actual block of code that is repeated. The states represents the point of progression through the story.
+	 * Each one contains local variables that when used with either give information or progress to the next gameState.
+	 * Every statement (so far) has a this."method" to either loop the State again, or transition to another state(method).
+	 * Each gameState will be followed by a helpState, so the user can always figure out what current commands are available.
+	 * Each helpState loops back to the specific roomState --- CHANGED. All help states will now use the loader
+	 * I made in an array.
+	 */
+	
+	public void teirmState0() { //first part of the game
+		
+		arrSR.add(0,0); //tells array they are in 0th stage
+		
+		String go = ("go to"); //strings for commands
+		
+		String merchant = ("merchant");
+		
+		String blackSmith = ("Blacksmith");
+		
+		String cheat = ("cheat");
+		
+		String map = ("map");
+
+		String input; 
+		
+		if (arrP.get(0) > 0 && arrW.get(0) > 0) {
+			
+			System.out.println("Now that you have geared up, would you like to begin the adventure?");
+			
+			String input2;
+			
+			input2 = sc.nextLine();
+			
+			if (input2.equalsIgnoreCase(yes)) {
+				
+				this.travelState0();
+				
+			} else if (input2.equalsIgnoreCase(no)) {
+				
+				System.out.println("Ok, take your time, and when you are ready, type 'begin adventure'.");
+				
+			} else {
+				
+				System.out.println("That is not a valid command. Please try again.");
+				
+				this.stateReturn();
+				
+			}
+			
+		}
+		
+		input = sc.nextLine(); 
+			
+		if (input.equalsIgnoreCase(inv)) {
+			
+			this.potions();
+			
+		} else if (input.equalsIgnoreCase((go + " " + merchant))) {
+			
+			System.out.println("You pack up and visit the local merchant!");
+			
+			this.teirmMerchantWelcome();
+			
+		}  else if (input.equalsIgnoreCase(help)) {
+			
+			this.helpState0();
+			
+		} else if (input.equalsIgnoreCase(hp)) {
+			
+			this.health();
+			
+		} else if (input.equalsIgnoreCase(spells)) {
+			
+			this.spells();
+			
+		} else if (input.equalsIgnoreCase(cheat)) {
+			
+			septims += 10000;
+			
+			this.stateReturn();
+			
+		} else if (input.equalsIgnoreCase(map)) {
+			
+			System.out.println("This town has a merchant, blacksmith, and worshipper.");
+			
+			this.stateReturn();
+			
+		} else if (input.equalsIgnoreCase(go + " " + blackSmith)) { 
+			
+			System.out.println("You gather your belongings, and walk to the blacksmith");
+			
+			this.teirmBlackSmithWelcome();
+			
+		} else {
+			
+			System.out.println("The command was not valid. Please type help for a list of commands.");
+			
+			this.stateReturn();
+			
+		}
+
+	}
+	
+	public void helpState0() { //helpState, used to give a list of commands, then loops back to current roomState. Need to make it consistent.
+		
+		System.out.println("The current commands are:");
+		System.out.println("");
+		System.out.println("Inventory");
+		System.out.println("Health");
+		System.out.println("Spells");
+		System.out.println("Go to 'place'");
+		System.out.println("Help");
+		System.out.println("");
+		System.out.println("If you need a list of places to go, type 'map'.");
+		
+		this.stateReturn(); //much easier instead of looping back different rooms.
+		
+	}
+	
+	public void teirmMerchantWelcome() { // don't need a stateReturn value since this is just a print function basically
+		
+		System.out.println("*You enter the door*");
+		System.out.println("");
+		System.out.println("Hello! Welcome to Belethor's General Good Store.");
+		System.out.println("Everything's for sale, my friend. Everything. If I had a sister, I'd sell her in a second.");
+		System.out.println("");
+		System.out.println("What will you be doing? Buying, or selling?");
+		System.out.println("");
+		System.out.println("Type 'buy' or 'sell'");
+	
+		this.teirmMerchantBuy();			
+		
+	}
+	
+	public void teirmMerchantWelcomeShort() { //decided not to use this.
+
+		System.out.println("What will you be doing? Buying, or selling?");
+		System.out.println("");
+		System.out.println("Type 'buy' or 'sell'");
+		
+		this.teirmMerchantBuy();
+		
+	}
+	
+	public void teirmMerchantBuy() {
+		
+		arrSR.add(0,1); //again, indicates which state to return to
+		
+		String buy = ("buy");
+		
+		String sell = ("sell");
+		
+		String hpPotion = ("health potion");
+		
+		String sSword = ("Steel Sword");
+		
+		String lssTome = ("Lightning Strike Spell tome");
+		
+		String input;
+		
+		input = sc.nextLine();
+	
+		if (input.equalsIgnoreCase(buy)) {
+			
+			System.out.println("Great, here are the items I have in stock.");
+			System.out.println("");
+			System.out.println("Your gold:" + septims + "septims."); //!
+			System.out.println("");
+			System.out.println("Health potion: 10 septims");
+			System.out.println("Steel Sword: 20 septims");
+			System.out.println("Lightning Strike Spell tome: 40 septims");
+			
+			String input2;
+			
+			input2 = sc.nextLine();
+			
+			if (input2.equalsIgnoreCase(hpPotion) && (septims >= 10)) {	
+				
+				System.out.println("You bought the health potion, and put it in your pocket.");
+				
+				arrP.remove(0);
+				
+				arrP.add(0, 1);
+				
+				septims -= 10;
+				
+				System.out.println("");
+				
+				
+				System.out.println("Will there be anything else for you?");
+				
+				this.teirmMerchantExit();
+				
+				
+			} else if (input2.equalsIgnoreCase(sSword) && (septims <= 20)) {
+				
+				System.out.println("Fool! You thought you could swindle me?! You do not have enough money! Begone!");
+				
+				this.teirmMerchantExit();
+				
+			} else if (input2.equalsIgnoreCase(sSword) && (septims >= 20)) {
+				
+				System.out.println("You bought the sword, and sheathed it.");
+				
+				septims -= 20;
+				
+				arrW.add(0,1);
+				
+				System.out.println("");				
+				
+				System.out.println("Will there be anything else for you?");
+				
+				this.teirmMerchantExit();
+				
+			} else if (input2.equalsIgnoreCase(lssTome)) {
+				
+				System.out.println("Wow, you really thought I wouldn't write code to check your money? Well, I admire your inquisition.");
+				System.out.println("To reward your inquisitive nature, I will give you the scroll, for free!");
+				
+				arrS.remove(0);
+				
+				arrS.add(0,1);
+				
+				this.teirmMerchantExit();
+				
+			} else {
+				
+				System.out.println("This input was not recognized. Please try again.");
+				
+				System.out.println("Would you like to buy or sell?");
+				
+				this.stateReturn();
+				
+			}
+			
+		} else if (input.equalsIgnoreCase(sell)) {
+			
+			this.teirmMerchantSell();
+			
+		} else {
+			
+			System.out.println("This input was not recognized, please try again.");
+			
+			System.out.println("Would you like to buy or sell?");
+			
+			this.stateReturn();
+			
+		}
+	}
+	
+	public void teirmMerchantSell() { //indentation got screwed on the end, cant tell why
+		
+		arrSR.add(0,2);
+		
+		String hpPotion = ("health potion");
+		
+		String sSword = ("Steel Sword");
+		
+		String input;
+			
+		if (arrP.get(0) < 0 || arrW.get(0) < 0) {
+			
+			System.out.println("I'd be glad to buy something, but you have nothing to sell!");
+			
+			this.teirmMerchantExit();
+		
+		} else {
+							
+			System.out.println("What have you got to sell? (Item name)");			
+		
+			input = sc.nextLine();
+		
+			if (input.equalsIgnoreCase(hpPotion) && arrP.get(0) == 1) {
+			
+			System.out.println("The best I can do for that health potion is 2 septims.");
+			
+			System.out.println("Deal?");
+			
+				String input2 = sc.nextLine();
+			
+				if (input2.equalsIgnoreCase(yes)) {
+					
+					System.out.println("Glad to do business with you!");
+					
+					septims += 2;
+					
+					arrP.add(0,0);
+					
+					this.teirmMerchantExit();
+					
+				} else if (input2.equalsIgnoreCase(no)) {
+					
+					System.out.println("All right, if you change your mind let me know!");
+					
+					this.teirmMerchantExit();
+					
+				} else {
+					
+					System.out.println("This input was not recognized, please try again.");
+					
+					this.stateReturn();
+					
+				}
+				
+			} else if (input.equalsIgnoreCase(sSword) && arrW.get(0) == 1) {
+				
+				System.out.println("The best I can do for that steel sword is 10 septims.");
+				
+				System.out.println("Deal?");
+				
+					String input2 = sc.nextLine();
+				
+					if (input2.equalsIgnoreCase(yes)) {
+						
+						System.out.println("Glad to do business with you!");
+						
+						septims += 10;
+						
+						arrW.add(0,0);
+						
+						this.teirmMerchantExit();
+						
+					} else if (input2.equalsIgnoreCase(no)) {
+						
+						System.out.println("All right, if you change your mind let me know!");
+						
+						this.teirmMerchantExit();
+						
+					} else {
+						
+						System.out.println("This input was not recognized, please try again");
+						
+						this.stateReturn();
+						
+					}
+				
+				
+			} else {
+				
+				System.out.println("I'm sorry but I can't buy that from you. Please come back if you have something better.");
+				
+				this.teirmMerchantExit();
+				
+			}
+		}
+	}
+	
+	public void teirmMerchantExit() { //shouldn't need a state return value for here either
+		
+		System.out.println("Are you finished witht the merchant? (Yes or No)");
+
+		String input;
+		
+		input = sc.nextLine();
+		
+		if (input.equalsIgnoreCase(no)) {
+			
+			this.teirmMerchantWelcomeShort();
+			
+		} else if (input.equalsIgnoreCase(yes)) {
+			
+			System.out.println("Satisfied with the exchange, you head back to town.");
+			
+			this.teirmState0();
+			
+		} else {
+			
+			System.out.println("This input was not recognized. Please enter yes or no.");
+			
+			this.teirmMerchantExit();
+			
+		}
+		
+	}
+	
+	public void teirmBlackSmithWelcome() {
+		
+		System.out.println("Blacksmith: Urian! How are you doing?");
+		System.out.println("Urian: Not good, there is something foul happening.");
+		System.out.println("Blacksmith: Oh, what do you need?");
+		System.out.println("Urian: I need a weapon.");
+		
+		this.teirmBlackSmithGive();
+		
+	}
+	
+	public void teirmBlackSmithGive() {
+		
+		arrW.add(0,2);
+		
+		System.out.println("Blacksmith: A weapon?! I've sold of the last in my reserves. Let me check if there is anything left.");
+		System.out.println("...");
+		
+		System.out.println("Blacksmith: Well, this is about all I got.");
+		
+		System.out.println("*You have recieved a wooden sword!*");
+		
+		System.out.println("Blacksmith: Now what is this weapon for? There seems no reason for you to need one.");
+		
+		System.out.println("Urian: I do not know for sure, but it seems that a necromancer has come to power.");
+		
+		System.out.println("Blacksmith: A necromancer? By the gods, what are you going to do");
+		
+		System.out.println("Urian: I don't know, but I'm going to investigate.");
+		
+		System.out.println("Blacksmith: Well, be safe friend, be safe.");
+		
+		
+		this.teirmState0();
+
+	}
+	
+	public void travelState0() {
+		
+		
+		
+	}
+
+	public static void main(String[] args) throws InterruptedException {
+		
+		Game_Draft run = new Game_Draft();
+		
+		run.start();
+
+	}
+	
+}
